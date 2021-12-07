@@ -1,5 +1,6 @@
 # BFSP [v1.05]
-Bitflip Fault Simulation Platform by Daniele Rizzieri (2021)
+Bitflip Fault Simulation Platform by Daniele Rizzieri (2021)\
+The platform injects a random bitflip in each of N copies of a binary file. Then it executed them, analysing the outcomes.
 
 ## Requirements
 Required Linux packages:
