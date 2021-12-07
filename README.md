@@ -22,16 +22,15 @@ Examples:
 
 
 ## Quick Start 
-1) Remember to set a value for the global setting variables in the code, not accessible via command parameters
-	-> binary file name
-	-> binary arguments
-	-> hang timeout
-	-> See begin of file bfsp.py for more details
+1) Remember to set a value for the global setting variables in the code, not accessible via command parameters (see ***bfsp.py*** for more details):
+	- binary file name
+	- binary arguments
+	- hang timeout
 
-2) Put SW executable file*** under test in ./run/ folder
-	[*** Please read carefully "Test Binary File Guidelines" section]
+2) Put SW executable file*** under test in ./run/ folder\
+		[*** Read carefully ***Test Binary File Guidelines*** section]
 
-3) Type "python3 bfsp.py -h" or "python3 bfsp.py --help" for usage info
+3) Type "python3 bfsp.py -h" or "python3 bfsp.py --help" for usage info:
 
 >\> Usage: python3 bfsp.py -n N [options]\
 > &nbsp;&nbsp;&nbsp;required:\
