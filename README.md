@@ -44,3 +44,11 @@ Examples:
 4) See crash report in the file indicated at end of execution.
 
 5) See execution report in the file indicated at end of execution.
+
+### Output File Locations 
+- ./bitflipped_binaries/ --> binaries with injected bitflips
+- ./bitflipped_binaries/results/ --> functional results of the binaries 
+- ./core_dumps/ --> coredump files of crashed processes in 
+- ./gdb_logs/ --> log files from gdb analysis of the coredumps 
+- ./exec_reports/ --> reports with info about the exit codes and hang processes 
+- ./crash_reports/ --> reports with info about the crashed processes 
