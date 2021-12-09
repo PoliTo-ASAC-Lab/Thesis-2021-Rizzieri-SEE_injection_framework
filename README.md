@@ -1,15 +1,18 @@
-# BFSP [v1.05]
+# SEE Injection Framework 2021
+This repository contains two Single Event Effect (SEE) injection platforms. The first one is called **BFSP - "Bitflip Fault Injection Platform"** and it is targeting the executable file of a software application, simulating Single Event Upset (SEU) and Multi-Bit Upset (MBU) inside the main memory of an embedded processor. The second platform is called **GDBitflip** and it is targeting the processors registers, simulating SEU and MBU affecting them during the runtime.
+
+## BFSP [v1.05]
 Bitflip Fault Simulation Platform by Daniele Rizzieri (2021)\
 The platform injects a random bitflip in each of N copies of a binary file. Then it executed them, analysing the outcomes.
 
-## Requirements
+### Requirements
 Required Linux packages:
 - python3
 - procps
 - gdb
 - systemd-coredump
 
-## Test Binary File Guidelines
+### Test Binary File Guidelines
 In order to be properly testable, the program under test must be compliant with the following guidelines: 
 1) Application's output must be redirected to the standard output virtual file (i.e., it must be instructed to print the functional results to screen/console)
 2) Application's behaviour and functional output must be fully deterministic: the tester must ensure that the entire code does not depend on time or other random variables. 
@@ -22,8 +25,8 @@ Examples:
     3. When compiling, the tester should avoid the compiler optimization options "-o#"
 
 
-## Quick Start 
-1) [***BFSP Only***] Remember to set a value for the global setting variables in the code, not accessible via command parameters (see ***bfsp.py*** for more details):
+### Quick Start 
+1) [**BFSP Only**] Remember to set a value for the global setting variables in the code, not accessible via command parameters (see **bfsp.py** for more details):
 	- binary file name
 	- binary arguments
 	- hang timeout
@@ -46,7 +49,7 @@ Examples:
 
 5) See execution report in the file indicated at end of execution.
 
-### Output File Locations 
+#### Output File Locations 
 - ./bitflipped_binaries/ --> binaries with injected bitflips
 - ./bitflipped_binaries/results/ --> functional results of the binaries 
 - ./core_dumps/ --> coredump files of crashed processes in 
