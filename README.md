@@ -23,7 +23,7 @@ Examples:
 
 
 ## Quick Start 
-1) Remember to set a value for the global setting variables in the code, not accessible via command parameters (see ***bfsp.py*** for more details):
+1) [***BFSP Only***] Remember to set a value for the global setting variables in the code, not accessible via command parameters (see ***bfsp.py*** for more details):
 	- binary file name
 	- binary arguments
 	- hang timeout
