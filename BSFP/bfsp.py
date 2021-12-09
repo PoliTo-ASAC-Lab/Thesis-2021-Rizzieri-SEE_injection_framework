@@ -11,7 +11,10 @@ import shlex
 import bfsp_utils
 import bfsp_report_zipper
 import crash_doctor
+
 from bitman import bitflip
+from bitman_MEU import bitflip_MEU
+
 from crc32 import CRC32_hash
 
 ########## SETTING VARIABLES ##########
@@ -31,6 +34,7 @@ def exit_usage():
     usage = "\nUsage: python3 bfsp.py -n N [options]"
     usage += "\n   required:"
     usage += "\n\t-n N,\t\tN = number of injections"
+    usage += "\n\t-m 1/2/3\t\tMode selection: 1-SEU, 2-MBU, 3-ClearContent"
     usage += "\n   options:"
     usage += "\n\t-s r_seed,\tSet the random seed to r_seed"
     usage += "\n\t-v, --verbose,\tTo produce verbose output report "
@@ -53,6 +57,17 @@ else:
             injection_num = int(param_n)
         else:
             sys.exit("Invalid number of injections! (0-20000")
+    else:
+        exit_usage()
+
+    #Mode Selection (REQUIRED)
+    if "-m" in sys.argv:
+        param_mode_index = sys.argv.index("-m")+1
+        param_mode = sys.argv[param_mode_index]
+        if (param_mode.isnumeric() and int(param_mode) > 0 and int(param_mode) < 4):
+            selected_mode = int(param_mode)
+        else:
+            sys.exit("Invalid mode! (1-SEU, 2-MBU, 3-ClearContent)")
     else:
         exit_usage()
 
@@ -105,8 +120,13 @@ if __name__ == '__main__':
     NOTE: {injection num} bitflipped copies are made and stored in ./bitflipped_binaries/
     """
     random.seed(r_seed)
-    bfsp_utils.bitflip_injection(c_prog_name, injection_num)
-
+    
+    if selected_mode == 1:
+        bfsp_utils.bitflip_injection_SEU(c_prog_name, injection_num)
+    elif selected_mode == 2:
+        bfsp_utils.bitflip_injection_MBU(c_prog_name, injection_num)
+    elif selected_mode == 3:
+        bfsp_utils.bitflip_injection_CLEAR(c_prog_name, injection_num)
 
 
 

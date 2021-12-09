@@ -24,6 +24,7 @@ def exit_usage():
     usage += "\n\n   required:"
     usage += "\n\tPATH/TO/BINARY\t\tPath (relative or absolute) to binary file under test"
     usage += "\n\t-n <num>,\t\t\t<num> = number of injections"
+    usage += "\n\t-m 1/2/3/4\t\tMode selection: 1-SEU, 2-MBU, 3-ClearContent, 4-PresetContent"
     usage += "\n\n   optional:"
     usage += "\n\t--args <num_args> ARGS\t<num_args> = number of args of binary;"
     usage += "\n\t\t\t\tARGS = argument of program divided by space"
@@ -71,6 +72,25 @@ else:
             injection_num = int(param_n)
         else:
             sys.exit("Invalid number of injections! (0-20000")
+    else:
+        exit_usage()
+
+    #Mode Selection (REQUIRED)
+    if "-m" in sys.argv:
+        param_mode_index = sys.argv.index("-m")+1
+        param_mode = sys.argv[param_mode_index]
+        if (param_mode.isnumeric() and int(param_mode) > 0 and int(param_mode) < 5):
+            selected_mode = int(param_mode)
+            if selected_mode == 1:
+                print("--> Selected SEU injection mode")
+            elif selected_mode == 2:
+                print("--> Selected MBU injection mode")
+            elif selected_mode == 3:
+                print("--> Selected ClearContent injection mode")
+            elif selected_mode == 4:
+                print("--> Selected PresetContent injection mode")
+        else:
+            sys.exit("Invalid mode! (1-SEU, 2-MBU, 3-ClearContent, 4-PresetContent)")
     else:
         exit_usage()
 
@@ -126,6 +146,8 @@ if __name__ == '__main__':
     rand_instr_step_l = []
     rand_reg_l = []
     rand_bit_pos_l = []
+    rand_bit_pos_A_l = []
+    rand_bit_pos_B_l = []
     registers = ARM_CortexA9_info.registers
 
     #### Retrieving SLOC
@@ -138,7 +160,14 @@ if __name__ == '__main__':
         rand_line_step_l.append(random.randint(0,code_lines_count))    
         rand_instr_step_l.append(random.randint(0,1000))
         rand_reg_l.append(random.choice(registers))
+        
+        # bit to be flipped in SEU
         rand_bit_pos_l.append(random.randint(0,31))
+
+        # adiacent bits to be flipped in MBU
+        bit_pos_A = random.randint(0,30)
+        rand_bit_pos_A_l.append(bit_pos_A)
+        rand_bit_pos_B_l.append(bit_pos_A+1)
 
 
     ############################################################################
@@ -182,7 +211,18 @@ if __name__ == '__main__':
             cmd += f" -ex 'py rand_instr = {rand_instr_step_l[i]}'"
             cmd += f" -ex 'py target_register = \"{rand_reg_l[i]}\"'"
             cmd += f" -ex 'py bit_pos = {rand_bit_pos_l[i]}'"
-            cmd += f" -ex 'source inner_script.py' "
+            cmd += f" -ex 'py bit_pos_A = {rand_bit_pos_A_l[i]}'"
+            cmd += f" -ex 'py bit_pos_B = {rand_bit_pos_B_l[i]}'"
+
+            if selected_mode == 1:
+                cmd += f" -ex 'source inner_script.py' "
+            elif selected_mode == 2:
+                cmd += f" -ex 'source inner_script_MEU.py' "
+            elif selected_mode == 3:
+                cmd += f" -ex 'source inner_script_CLEAR.py' "
+            elif selected_mode == 4:
+                cmd += f" -ex 'source inner_script_PRESET.py' "
+
             gdb_proc = subprocess.Popen(cmd,shell=True, stdout=subprocess.PIPE, encoding="utf-8")#, stderr = subprocess.DEVNULL)
             
 

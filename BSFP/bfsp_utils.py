@@ -10,7 +10,10 @@ import time
 import shlex
 
 from exit_code_dict import ec_dict
+
 from bitman import bitflip
+from bitman_MEU import bitflip_MEU
+
 from crc32 import CRC32_hash
 
 def uP_cool_down(t):
@@ -76,8 +79,8 @@ def clear_faulty_directory():
     print("...OK")
 
 
-def bitflip_injection(c_prog_name, injection_num):
-    print("2) Performing fault injection on golden_content...")
+def bitflip_injection_SEU(c_prog_name, injection_num):
+    print("2) Performing SEU fault injection on golden_content...")
     with open(f"./run/{c_prog_name}", "rb") as golden_file:
         golden_content = golden_file.read()
     golden_file.close()
@@ -106,6 +109,77 @@ def bitflip_injection(c_prog_name, injection_num):
 
     print("...OK")
 
+def bitflip_injection_MBU(c_prog_name, injection_num):
+    print("2) Performing MBU fault injection on golden_content...")
+    with open(f"./run/{c_prog_name}", "rb") as golden_file:
+        golden_content = golden_file.read()
+    golden_file.close()
+
+    for i in range(0, int(injection_num)):
+        byte_cord = random.randint(0, len(golden_content) - 1)
+        number = golden_content[byte_cord]
+        bit_cord = random.randint(0, 7)
+        faulty_number = bitflip_MEU(number, bit_cord)
+        faulty_bin_content = bytearray(golden_content)
+        faulty_bin_content[byte_cord] = faulty_number
+        faulty_bin_filename = f"./bitflipped_binaries/inj_{i}_{c_prog_name}"
+        #print (f"golden byte: {golden_content [byte_cord]}, faulty byte:{faulty_bin_content[byte_cord]},{byte_cord} ")
+        with open(faulty_bin_filename, "wb") as faulty_file:
+            faulty_file.write(faulty_bin_content)
+        faulty_file.close()
+
+        if not((i+1)%50) : print(f"\tDONE {i+1} injections",end="\r")
+    print(f"\tDONE {i+1} injections")
+    print("\t...OK")
+
+    print("\n\tSetting permission +x to bitflipped binaries...")
+    permission_setter = subprocess.Popen(['chmod','-R','+x','./bitflipped_binaries'])
+    permission_setter.wait()
+    print("\t...OK")
+
+    print("...OK")
+
+def bitflip_injection_CLEAR(c_prog_name, injection_num):
+    print("2) Performing CLEAR fault injection on golden_content...")
+    with open(f"./run/{c_prog_name}", "rb") as golden_file:
+        golden_content = golden_file.read()
+    golden_file.close()
+    #print(f"\n\n\n\tlength in bytes of executable --> {len(golden_content)}\n\n")
+
+    for i in range(0, int(injection_num)):
+
+        byte_cord_A = 1;
+        while byte_cord_A%2 != 0: #while picking a odd number, repeat
+            byte_cord_A = random.randint(0, len(golden_content) - 2)
+        byte_cord_B = byte_cord_A + 1
+
+        faulty_bin_content = bytearray(golden_content)
+
+        #print(f"[{injection_num}] picked byte number -> #{byte_cord_A} - #{byte_cord_B}")
+        #print(f"golden contents -> [{faulty_bin_content[byte_cord_A]}] - [{faulty_bin_content[byte_cord_B]}]")
+
+        # Pynq DDR3 RAM provides 16bit wide data bus, so clear fault means set all the
+        faulty_bin_content[byte_cord_A] = 0
+        faulty_bin_content[byte_cord_B] = 0
+
+        #print(f"faulty contents -> [{faulty_bin_content[byte_cord_A]}] - [{faulty_bin_content[byte_cord_B]}]")
+
+        faulty_bin_filename = f"./bitflipped_binaries/inj_{i}_{c_prog_name}"
+        #print (f"golden byte: {golden_content [byte_cord]}, faulty byte:{faulty_bin_content[byte_cord]},{byte_cord} ")
+        with open(faulty_bin_filename, "wb") as faulty_file:
+            faulty_file.write(faulty_bin_content)
+        faulty_file.close()
+
+        if not((i+1)%50) : print(f"\tDONE {i+1} injections",end="\r")
+    print(f"\tDONE {i+1} injections")
+    print("\t...OK")
+
+    print("\n\tSetting permission +x to bitflipped binaries...")
+    permission_setter = subprocess.Popen(['chmod','-R','+x','./bitflipped_binaries'])
+    permission_setter.wait()
+    print("\t...OK")
+
+    print("...OK")
 
 def faulty_bins_exec(start, end, 
                     c_prog_name,
@@ -157,7 +231,6 @@ def faulty_bins_exec(start, end,
         else:
             print(f"Exit code of faulty process#{i}:{process_exit_code}")
             exitcode_l.append(process_exit_code)
-
 
 def exit_code_analysis(exitcode_l, 
                         terminated_l,
