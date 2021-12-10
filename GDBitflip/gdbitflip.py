@@ -20,11 +20,11 @@ using -g option and the source files should be accessible.
 
 ########## PARAMETER PARSING ##########
 def exit_usage():
-    usage = "\nUsage: python3 gdbitflip.py PATH/TO/BINARY -n <num> [--args <num_args> ARGS] [options]"
+    usage = "\nUsage: python3 gdbitflip.py PATH/TO/BINARY -n <N> -m <mode> [--args <num_args> ARGS] [options]"
     usage += "\n\n   required:"
     usage += "\n\tPATH/TO/BINARY\t\tPath (relative or absolute) to binary file under test"
-    usage += "\n\t-n <num>,\t\t\t<num> = number of injections"
-    usage += "\n\t-m 1/2/3/4\t\tMode selection: 1-SEU, 2-MBU, 3-ClearContent, 4-PresetContent"
+    usage += "\n\t-n <N>,\t\t\t<N> = number of injections"
+    usage += "\n\t-m <1/2/3/4>\t\tMode selection: 1-SEU, 2-MBU, 3-ClearContent, 4-PresetContent"
     usage += "\n\n   optional:"
     usage += "\n\t--args <num_args> ARGS\t<num_args> = number of args of binary;"
     usage += "\n\t\t\t\tARGS = argument of program divided by space"

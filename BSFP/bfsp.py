@@ -31,10 +31,10 @@ uP_cool_down_time = 3 # how many seconds between a cluster and the other, to coo
 
 ########## PARAMETER PARSING ##########
 def exit_usage():
-    usage = "\nUsage: python3 bfsp.py -n N [options]"
+    usage = "\nUsage: python3 bfsp.py -n <N> -m <1/2/3> [options]"
     usage += "\n   required:"
-    usage += "\n\t-n N,\t\tN = number of injections"
-    usage += "\n\t-m 1/2/3\t\tMode selection: 1-SEU, 2-MBU, 3-ClearContent"
+    usage += "\n\t-n <N>,\t\tN = number of injections"
+    usage += "\n\t-m <1/2/3>\t\tMode selection: 1-SEU, 2-MBU, 3-ClearContent"
     usage += "\n   options:"
     usage += "\n\t-s r_seed,\tSet the random seed to r_seed"
     usage += "\n\t-v, --verbose,\tTo produce verbose output report "
