@@ -1,0 +1,10 @@
+# Ignoring output folders
+
+bitflipped_binaries
+core_dumps
+gdb_logs
+exec_reports
+crash_reports
+
+# Ignoring executables
+run/*
